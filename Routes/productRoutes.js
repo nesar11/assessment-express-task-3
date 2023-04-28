@@ -3,27 +3,30 @@ const app = express();
 const productRoutes = express.Router();
 // const extractFile = require('../middleware/file')
 
-
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-  destination : function (req, file, cb){
-    return cb(null, "uploads")
+  destination: function (req, file, cb) {
+    return cb(null, 'uploads');
   },
   filename: function (req, file, cb) {
-    return cb( null, `${Date.now()}-${file.originalname}`)
-    
+    return cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage });
+
+productRoutes.post(
+  '/upload',
+  upload.single('ProductImage'),
+  async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+    try {
+      res.send({ status: 200, success: true, msg: 'success' });
+    } catch (error) {
+      res.send({ status: 400, success: false, msg: 'success' });
+    }
   }
-})
-const upload = multer({storage});
+);
 
-productRoutes.post('/upload', upload.single('ProductImage'),(req, res)=>{
-  console.log(req.body)
-  console.log(req.file)
-  return res.redirect('/')
-
-})
-
-
-
-module.exports =  productRoutes
+module.exports = productRoutes;
